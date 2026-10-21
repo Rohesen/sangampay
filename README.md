@@ -16,7 +16,7 @@ Money settles straight into **your own** accounts.
 ![Self-hosted](https://img.shields.io/badge/self--hosted-yes-1d1160.svg)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ffd166.svg)](CONTRIBUTING.md)
 
-[**Quick start**](#-quick-start) · [**Features**](#-features) · [**Screenshots**](#-screenshots) · [**API**](#-api-at-a-glance) · [**Integrations**](#-integrations) · [**Security**](#-security)
+[**Website**](https://sangampay.com) · [**Quick start**](#-quick-start) · [**Features**](#-features) · [**Screenshots**](#-screenshots) · [**API**](#-api-at-a-glance) · [**Integrations**](#-integrations) · [**Security**](#-security)
 
 <br>
 

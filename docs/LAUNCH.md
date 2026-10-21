@@ -31,6 +31,7 @@ It's **non-custodial**: SangamPay never touches the money, so anyone can self-ho
 
 Sangam (संगम) means "confluence", where rivers meet. Here, every payment rail meets in one place.
 
+🌐 Website: https://sangampay.com
 ⭐ GitHub: https://github.com/Rohesen/sangampay
 
 I'd love feedback, stars, and contributors, especially for new gateway adapters (Cashfree, PayU, PhonePe PG…).
@@ -44,7 +45,7 @@ I'd love feedback, stars, and contributors, especially for new gateway adapters 
 Just open-sourced SangamPay 🇮🇳: a self-hosted payment platform. UPI (₹0 direct), AutoPay subscriptions, GST
 invoices, payment links, smart routing with failover, auto-reconciliation, payouts. Money lands in your own
 accounts. MIT licensed.
-https://github.com/Rohesen/sangampay
+https://sangampay.com
 
 ## GitHub repository settings
 
@@ -52,4 +53,5 @@ https://github.com/Rohesen/sangampay
   and smart routing over Razorpay, Stripe and PayPal. Non-custodial.
 - **Topics:** `payments` `upi` `payment-gateway` `fintech` `india` `gst` `subscriptions` `razorpay` `stripe`
   `paypal` `fastapi` `python` `self-hosted` `open-source`
+- **Website:** https://sangampay.com (set it in the repo's About section)
 - **Social preview image:** upload `docs/screenshots/dashboard-overview.png` (Settings → General → Social preview).

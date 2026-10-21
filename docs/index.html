@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SangamPay · Open-source payment platform for India and the world</title>
+<meta name="description" content="Open-source, self-hosted payments: UPI (incl. zero-fee direct UPI), AutoPay subscriptions, GST invoices, payment links, smart routing, reconciliation and payouts over Razorpay, Stripe and PayPal. Money lands in your own accounts.">
+<link rel="canonical" href="https://sangampay.com/">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sangampay.com/">
+<meta property="og:title" content="SangamPay · Every payment rail. One open-source platform.">
+<meta property="og:description" content="UPI, AutoPay, GST invoices, subscriptions, payouts and smart routing. Self-hosted, non-custodial, MIT licensed.">
+<meta property="og:image" content="https://sangampay.com/screenshots/dashboard-overview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1d1160">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f5fc;--surface:#fff;--surface-2:#f1effa;--fg:#16132b;--muted:#5f5b7a;--line:#e6e3f2;
+  --brand:#5b3df5;--brand-2:#0fb5a6;--ink:#1d1160;--gold:#ffd166;--ok:#0e9f6e;
+  --shadow:0 1px 2px rgba(22,19,43,.05),0 24px 60px -24px rgba(40,24,120,.28);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0b0a14;--surface:#15131f;--surface-2:#1b1928;--fg:#f1effa;--muted:#a19dba;--line:#272439;
+  --brand:#8b74ff;--brand-2:#2dd4bf;--ok:#34d399;--shadow:0 1px 2px rgba(0,0,0,.4),0 24px 60px -24px rgba(0,0,0,.8);
+}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:16px/1.6 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+code,pre{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* nav */
+nav.top{position:sticky;top:0;z-index:20;backdrop-filter:saturate(1.6) blur(14px);background:color-mix(in srgb,var(--bg) 78%,transparent);border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+nav.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.02em;text-decoration:none}
+.brand img{width:30px;height:30px}
+.brand b{font-weight:800}.brand span{color:var(--brand)}
+.links{display:flex;gap:26px;font-weight:600;font-size:14.5px;color:var(--muted)}
+.links a{text-decoration:none}.links a:hover{color:var(--fg)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;text-decoration:none;border-radius:12px;padding:12px 20px;border:1px solid transparent;transition:transform .15s,box-shadow .15s,background .15s;white-space:nowrap}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--brand),color-mix(in srgb,var(--brand) 65%,var(--brand-2)));color:#fff;box-shadow:0 10px 24px -10px color-mix(in srgb,var(--brand) 80%,transparent)}
+.btn.ghost{background:var(--surface);border-color:var(--line);color:var(--fg)}
+.btn.sm{padding:8px 14px;font-size:14px;border-radius:10px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding:84px 0 40px;text-align:center}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto;height:620px;z-index:-1;
+  background:radial-gradient(600px 300px at 20% 30%,color-mix(in srgb,var(--brand) 22%,transparent),transparent 70%),
+             radial-gradient(520px 280px at 80% 20%,color-mix(in srgb,var(--brand-2) 20%,transparent),transparent 70%)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:13.5px;font-weight:600;color:var(--muted)}
+.pill b{color:var(--brand)}
+h1{font-size:clamp(38px,6.4vw,72px);line-height:1.04;letter-spacing:-.035em;margin:22px auto 18px;max-width:1040px;font-weight:800}
+h1 .grad{background:linear-gradient(120deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(17px,2vw,20px);color:var(--muted);max-width:720px;margin:0 auto 30px}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.rails{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:34px auto 0;max-width:820px}
+.rails span{padding:6px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:13.5px;font-weight:600}
+.shot-hero{margin:56px auto 0;max-width:1080px;border-radius:20px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:var(--surface)}
+.shot-hero .bar{display:flex;gap:7px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.shot-hero .bar i{width:11px;height:11px;border-radius:50%;background:var(--line)}
+
+/* sections */
+section{padding:88px 0}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--brand)}
+h2{font-size:clamp(30px,4vw,44px);line-height:1.1;letter-spacing:-.03em;margin:10px 0 14px;font-weight:800}
+.sub{color:var(--muted);font-size:18px;max-width:680px;margin:0}
+.center{text-align:center}.center .sub{margin:0 auto}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:-10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px}
+.stat b{display:block;font-size:30px;letter-spacing:-.03em}
+.stat span{color:var(--muted);font-size:14.5px}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.ico{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;margin-bottom:16px;color:var(--brand);background:color-mix(in srgb,var(--brand) 12%,transparent)}
+.card h3{margin:0 0 8px;font-size:19px;letter-spacing:-.01em}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.card ul{margin:12px 0 0;padding-left:18px;color:var(--muted);font-size:14.5px}
+.card li{margin:3px 0}
+
+/* comparison */
+.compare{margin-top:40px;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.compare table{width:100%;border-collapse:collapse;font-size:15.5px}
+.compare th,.compare td{padding:16px 22px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+.compare tr:last-child td{border-bottom:0}
+.compare th{font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:var(--surface-2)}
+.compare td:first-child{font-weight:700;width:24%}
+.compare td:nth-child(2){color:var(--muted)}
+.compare td:last-child{font-weight:600}
+.yes{color:var(--ok);font-weight:800;margin-right:6px}
+
+/* showcase */
+.show{display:grid;grid-template-columns:1fr 1.25fr;gap:48px;align-items:center}
+.show.rev{grid-template-columns:1.25fr 1fr}.show.rev .copy{order:2}
+.show>*,.steps>*,.grid>*,.gallery>*{min-width:0}  /* let code blocks scroll instead of widening the page */
+.show .copy ul{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:12px}
+.show .copy li{display:flex;gap:12px;align-items:flex-start;color:var(--muted)}
+.show .copy li b{color:var(--fg)}
+.check{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok);margin-top:2px}
+.frame{border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:var(--surface)}
+.stack{position:relative}
+.stack .phone{position:absolute;right:-14px;bottom:-34px;width:34%;border-radius:22px;border:6px solid var(--ink);box-shadow:var(--shadow);overflow:hidden}
+
+/* code */
+.code{background:#0f0d1a;color:#e9e6ff;border-radius:18px;padding:22px 24px;overflow-x:auto;font-size:14px;line-height:1.7;border:1px solid #241f3d;box-shadow:var(--shadow)}
+.code .c{color:#7d779c}.code .k{color:#b9a8ff}.code .s{color:#7ce0c3}.code .n{color:#ffd166}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{font:inherit;font-weight:600;font-size:13.5px;border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:7px 14px;border-radius:10px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+
+/* gallery */
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.gallery figure{margin:0}
+.gallery figcaption{font-size:14px;color:var(--muted);margin-top:10px;font-weight:600}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px;counter-reset:s}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px;counter-increment:s}
+.step::before{content:counter(s);display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--fg);color:var(--bg);font-weight:800;margin-bottom:14px}
+.step h3{margin:0 0 6px;font-size:18px}
+.step p{margin:0 0 14px;color:var(--muted);font-size:15px}
+.step pre{margin:0;background:var(--surface-2);border-radius:12px;padding:12px 14px;font-size:13px;white-space:pre-wrap;word-break:break-all}
+
+/* final cta */
+.final{border-radius:28px;padding:64px 40px;text-align:center;color:#fff;position:relative;overflow:hidden;
+  background:linear-gradient(140deg,#1d1160,#5b3df5 55%,#0fb5a6 140%)}
+.final::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 2px,transparent 2px 24px);pointer-events:none}
+.final h2{color:#fff}.final p{opacity:.88;font-size:18px;max-width:620px;margin:0 auto 28px}
+.final .btn.ghost{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff}
+.final .btn.gold{background:var(--gold);color:#3d2a00}
+
+.note{margin-top:28px;padding:18px 22px;border-radius:16px;border:1px dashed var(--line);color:var(--muted);font-size:14.5px;background:var(--surface)}
+footer{padding:48px 0 60px;color:var(--muted);font-size:14.5px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer nav{display:flex;gap:20px;flex-wrap:wrap}
+footer a{text-decoration:none}footer a:hover{color:var(--fg)}
+
+@media (max-width:960px){
+  .links{display:none}
+  .grid,.gallery,.steps{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .show,.show.rev{grid-template-columns:1fr;gap:32px}.show.rev .copy{order:0}
+  .stack .phone{right:8px;bottom:-24px}
+}
+@media (max-width:620px){
+  section{padding:64px 0}
+  .grid,.gallery,.steps{grid-template-columns:1fr}
+  .hero{padding-top:56px}
+  .compare th,.compare td{padding:12px 14px;font-size:14px}
+  .compare td:first-child{width:auto}
+  .final{padding:44px 22px}
+  nav.top .btn.ghost{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<nav class="top"><div class="wrap">
+  <a class="brand" href="#"><img src="logo.svg" alt=""><b>Sangam<span>Pay</span></b></a>
+  <div class="links"><a href="#features">Features</a><a href="#why">Why SangamPay</a><a href="#developers">Developers</a><a href="#start">Get started</a></div>
+  <div style="display:flex;gap:8px">
+    <a class="btn ghost sm" href="https://github.com/Rohesen/sangampay#readme">Docs</a>
+    <a class="btn primary sm" href="https://github.com/Rohesen/sangampay">★ Star on GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="pill"><b>v1.0</b> · Open source · MIT licensed</span>
+  <h1>Every payment rail.<br><span class="grad">One open-source platform.</span></h1>
+  <p class="lead">Accept UPI, cards, net banking, AutoPay subscriptions and PayPal with one API. Smart routing, GST invoices,
+    reconciliation and payouts are built in. Self-hosted, and the money lands straight in <b style="color:var(--fg)">your own accounts</b>.</p>
+  <div class="cta">
+    <a class="btn primary" href="#start">Get started in 2 minutes →</a>
+    <a class="btn ghost" href="https://github.com/Rohesen/sangampay"><svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> View source</a>
+  </div>
+  <div class="rails"><span>UPI</span><span>UPI AutoPay</span><span>e-NACH</span><span>Net banking</span><span>Cards</span><span>Apple / Google Pay</span><span>ACH</span><span>SEPA</span><span>PayPal</span></div>
+  <div class="shot-hero"><div class="bar"><i></i><i></i><i></i></div>
+    <picture>
+      <source srcset="screenshots/dashboard-overview-dark.png" media="(prefers-color-scheme: dark)">
+      <img src="screenshots/dashboard-overview.png" alt="SangamPay dashboard showing net volume, success rate, MRR and a daily volume chart" width="1440" height="900">
+    </picture>
+  </div>
+</div></header>
+
+<div class="wrap"><div class="stats">
+  <div class="stat"><b>₹0</b><span>fee on direct UPI to your own UPI ID</span></div>
+  <div class="stat"><b>5</b><span>payment rails behind one API</span></div>
+  <div class="stat"><b>0</b><span>rupees held by us: non-custodial</span></div>
+  <div class="stat"><b>100%</b><span>open source, MIT licensed</span></div>
+</div></div>
+
+<section id="features"><div class="wrap">
+  <div class="center"><div class="eyebrow">Features</div><h2>Everything a growing business needs</h2>
+    <p class="sub">The parts that usually take five different products, in one self-hosted platform.</p></div>
+  <div class="grid">
+    <div class="card"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/></svg></div>
+      <h3>Accept every payment</h3><p>UPI (QR and intent), net banking, cards, ACH, SEPA and PayPal on a hosted, mobile-first checkout.</p></div>
+    <div class="card"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg></div>
+      <h3>Subscriptions</h3><p>UPI AutoPay, e-NACH and card mandates, or an invoice each cycle. Trials, quantities and smart dunning retries.</p></div>
+    <div class="card"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg></div>
+      <h3>GST tax invoices</h3><p>CGST + SGST or IGST chosen automatically from place of supply, with HSN/SAC codes and a Pay button.</p></div>
+    <div class="card"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="18" cy="18" r="2"/></svg></div>
+      <h3>Smart routing</h3><p>Route by priority, live success rate or lowest cost. If a gateway goes down, the next one takes over automatically.</p></div>
+    <div class="card"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></div>
+      <h3>Auto-reconciliation</h3><p>Upload your bank statement and zero-fee UPI payments are matched by UTR and confirmed for you.</p></div>
+    <div class="card"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/><path d="M5 21h14"/></svg></div>
+      <h3>Payouts and splits</h3><p>Pay vendors by IMPS, NEFT, RTGS or UPI, and split marketplace payments between sellers automatically.</p></div>
+    <div class="card"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></div>
+      <h3>Payment links and QR</h3><p>Sell without a website. Share a link or print a QR for your counter, with fixed or pay-what-you-want amounts.</p></div>
+    <div class="card"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <h3>Fraud and security</h3><p>Risk scores, blocklists, velocity limits, an AES-256 encrypted vault, signed webhooks and an audit log.</p></div>
+    <div class="card"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div>
+      <h3>One ledger, real analytics</h3><p>Volume, success rates by method and gateway, MRR, churn and exports across every gateway, in one place.</p></div>
+  </div>
+</div></section>
+
+<section id="why" style="padding-top:0"><div class="wrap">
+  <div class="center"><div class="eyebrow">Why SangamPay</div><h2>Gateways are silos. SangamPay connects them.</h2>
+    <p class="sub">Keep the gateways you trust. SangamPay sits on top and adds what they don't have.</p></div>
+  <div class="compare"><table>
+    <thead><tr><th></th><th>A single gateway</th><th>SangamPay</th></tr></thead>
+    <tbody>
+      <tr><td>Gateway outage</td><td>Checkout breaks</td><td><span class="yes">✓</span>Automatic failover to the next gateway</td></tr>
+      <tr><td>UPI fees</td><td>MDR on every payment</td><td><span class="yes">✓</span>₹0 direct UPI with auto-reconciliation</td></tr>
+      <tr><td>Your money</td><td>Held by the gateway, settled T+1/T+2</td><td><span class="yes">✓</span>Lands directly in your accounts</td></tr>
+      <tr><td>Reporting</td><td>One dashboard per gateway</td><td><span class="yes">✓</span>One ledger across all of them</td></tr>
+      <tr><td>Lock-in</td><td>Contracts, APIs, data</td><td><span class="yes">✓</span>Switch gateways with a config change</td></tr>
+      <tr><td>Source code</td><td>Closed</td><td><span class="yes">✓</span>MIT open source, self-hosted, auditable</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <div class="show">
+    <div class="copy"><div class="eyebrow">Checkout</div><h2>A checkout your customers will trust</h2>
+      <p class="sub">Fast, mobile-first and in dark mode automatically. Customers pick UPI, a bank or a card. Bank logins and card numbers are only ever typed on the bank's own page.</p>
+      <ul>
+        <li><span class="check">✓</span><span><b>Zero-fee UPI:</b> QR code, one-tap app link and UTR confirmation.</span></li>
+        <li><span class="check">✓</span><span><b>Every method</b> your connected gateways support, on one page.</span></li>
+        <li><span class="check">✓</span><span><b>Embeds anywhere</b> with one script tag or a plain redirect.</span></li>
+      </ul></div>
+    <div class="stack"><div class="frame"><img src="screenshots/checkout-upi.png" alt="UPI checkout with QR code" loading="lazy" width="1280" height="900"></div>
+      <img class="phone" src="screenshots/checkout-mobile.png" alt="Mobile checkout" loading="lazy" width="390" height="844"></div>
+  </div>
+</div></section>
+
+<section style="padding-top:40px"><div class="wrap">
+  <div class="show rev">
+    <div class="frame"><img src="screenshots/invoice.png" alt="GST tax invoice with IGST breakdown and pay button" loading="lazy" width="1100" height="1000"></div>
+    <div class="copy"><div class="eyebrow">Billing</div><h2>GST invoices and subscriptions on autopilot</h2>
+      <p class="sub">Bill once or every month. SangamPay works out the tax, collects through mandates and chases failed payments for you.</p>
+      <ul>
+        <li><span class="check">✓</span><span><b>Tax invoices</b> with CGST/SGST or IGST, HSN/SAC and your GSTIN.</span></li>
+        <li><span class="check">✓</span><span><b>UPI AutoPay and e-NACH</b>: customers approve once, renewals just happen.</span></li>
+        <li><span class="check">✓</span><span><b>Smart dunning</b> retries failed renewals on your schedule.</span></li>
+      </ul></div>
+  </div>
+</div></section>
+
+<section id="developers" style="padding-top:40px"><div class="wrap">
+  <div class="show">
+    <div class="copy"><div class="eyebrow">Developers</div><h2>An API you'll enjoy</h2>
+      <p class="sub">Clean REST, idempotency keys, signed webhooks, OpenAPI docs, a sandbox with time travel, and zero-dependency SDKs.</p>
+      <ul>
+        <li><span class="check">✓</span><span><b>Python and Node SDKs</b> with retries and webhook verification.</span></li>
+        <li><span class="check">✓</span><span><b>WooCommerce plugin</b> and a <b>Shopify bridge</b>.</span></li>
+        <li><span class="check">✓</span><span><b>Team keys with roles</b> and a full audit log.</span></li>
+      </ul></div>
+    <div>
+      <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-t="py">Python</button><button role="tab" aria-selected="false" data-t="js">Node.js</button><button role="tab" aria-selected="false" data-t="sh">cURL</button></div>
+<pre class="code" data-p="py"><span class="k">from</span> sangampay <span class="k">import</span> SangamPay, verify_webhook
+
+sp = SangamPay(<span class="s">"sk_test_..."</span>)
+pi = sp.payment_intents.create(
+    amount=<span class="n">49900</span>, currency=<span class="s">"INR"</span>,   <span class="c"># ₹499.00</span>
+    description=<span class="s">"Order #1001"</span>,
+    idempotency_key=<span class="s">"order-1001"</span>,
+)
+redirect(pi[<span class="s">"checkout_url"</span>])
+
+<span class="c"># later, in your webhook handler</span>
+event = verify_webhook(body, sig, <span class="s">"whsec_..."</span>)
+<span class="k">if</span> event[<span class="s">"type"</span>] == <span class="s">"payment_intent.succeeded"</span>:
+    fulfil(event[<span class="s">"data"</span>][<span class="s">"id"</span>])</pre>
+<pre class="code" data-p="js" hidden><span class="k">const</span> { SangamPay, verifyWebhook } = require(<span class="s">"sangampay"</span>);
+<span class="k">const</span> sp = <span class="k">new</span> SangamPay(process.env.SANGAM_KEY);
+
+<span class="k">const</span> pi = <span class="k">await</span> sp.paymentIntents.create(
+  { amount: <span class="n">49900</span>, currency: <span class="s">"INR"</span> },
+  { idempotencyKey: <span class="s">"order-1001"</span> },
+);
+res.redirect(pi.checkout_url);
+
+<span class="c">// webhook</span>
+<span class="k">const</span> event = verifyWebhook(req.body, req.get(<span class="s">"Sangam-Signature"</span>), secret);</pre>
+<pre class="code" data-p="sh" hidden>curl -X POST https://pay.yourshop.com/v1/payment_intents \
+  -H <span class="s">"Authorization: Bearer sk_test_..."</span> \
+  -H <span class="s">"Idempotency-Key: order-1001"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"amount": 49900, "currency": "INR",
+       "description": "Order #1001"}'</span>
+
+<span class="c"># → { "id": "pi_...", "checkout_url": "https://..." }</span></pre>
+    </div>
+  </div>
+</div></section>
+
+<section style="padding-top:20px"><div class="wrap">
+  <div class="center"><div class="eyebrow">Dashboard</div><h2>Run your whole money operation</h2></div>
+  <div class="gallery">
+    <figure><div class="frame"><img src="screenshots/dashboard-subscriptions.png" alt="Subscriptions" loading="lazy" width="1440" height="900"></div><figcaption>Subscriptions and mandates</figcaption></figure>
+    <figure><div class="frame"><img src="screenshots/dashboard-gateways.png" alt="Gateways and routing" loading="lazy" width="1440" height="900"></div><figcaption>Gateways and smart routing</figcaption></figure>
+    <figure><div class="frame"><img src="screenshots/dashboard-payments.png" alt="Payments with risk scores" loading="lazy" width="1440" height="900"></div><figcaption>Payments with risk scores</figcaption></figure>
+    <figure><div class="frame"><img src="screenshots/dashboard-recon.png" alt="Reconciliation" loading="lazy" width="1440" height="900"></div><figcaption>Bank reconciliation</figcaption></figure>
+    <figure><div class="frame"><img src="screenshots/dashboard-developers.png" alt="Developers" loading="lazy" width="1440" height="900"></div><figcaption>Team keys, webhooks, audit log</figcaption></figure>
+    <figure><div class="frame"><img src="screenshots/dashboard-overview-dark.png" alt="Dark mode dashboard" loading="lazy" width="1440" height="900"></div><figcaption>Dark mode, automatically</figcaption></figure>
+  </div>
+</div></section>
+
+<section id="start" style="padding-top:20px"><div class="wrap">
+  <div class="center"><div class="eyebrow">Get started</div><h2>Running in two minutes</h2>
+    <p class="sub">Everything works in test mode out of the box, with a built-in sandbox for every payment method.</p></div>
+  <div class="steps">
+    <div class="step"><h3>Clone and run</h3><p>Python 3.10+, SQLite by default.</p>
+<pre>git clone https://github.com/Rohesen/sangampay
+cd sangampay
+pip install -r requirements.txt
+uvicorn sangam.main:app</pre></div>
+    <div class="step"><h3>Load demo data</h3><p>Realistic payments, subscriptions and invoices.</p>
+<pre>python -m sangam.demo
+# prints a test key → open
+# localhost:8000/dashboard</pre></div>
+    <div class="step"><h3>Go live</h3><p>Docker + Postgres, then connect your own gateway accounts.</p>
+<pre>cp .env.example .env
+docker compose up -d</pre></div>
+  </div>
+  <p class="note"><b>Non-custodial by design.</b> SangamPay never receives or holds customer funds. Payments settle in your own
+    Razorpay, Stripe, PayPal or bank accounts, which is why anyone can self-host it. Keep it that way: pooling funds for others
+    requires a payment aggregator licence (RBI in India).</p>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <div class="final">
+    <h2>Build payments in the open</h2>
+    <p>SangamPay is free and MIT licensed. Star it, self-host it, and help add the next gateway.</p>
+    <div class="cta">
+      <a class="btn gold" href="https://github.com/Rohesen/sangampay">★ Star on GitHub</a>
+      <a class="btn ghost" href="https://github.com/Rohesen/sangampay/blob/main/CONTRIBUTING.md">Contribute</a>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <a class="brand" href="#"><img src="logo.svg" alt=""><b>Sangam<span>Pay</span></b></a>
+  <nav>
+    <a href="https://github.com/Rohesen/sangampay">GitHub</a>
+    <a href="https://github.com/Rohesen/sangampay#readme">Documentation</a>
+    <a href="https://github.com/Rohesen/sangampay/blob/main/SECURITY.md">Security</a>
+    <a href="https://github.com/Rohesen/sangampay/blob/main/LICENSE">MIT License</a>
+  </nav>
+  <span>संगम: where every payment rail meets.</span>
+</div></footer>
+
+<script>
+document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", x === b));
+  document.querySelectorAll("pre[data-p]").forEach(p => p.hidden = p.dataset.p !== b.dataset.t);
+}));
+</script>
+</body>
+</html>
