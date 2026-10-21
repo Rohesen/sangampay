@@ -15,6 +15,14 @@ engine = create_engine(
 )
 SessionLocal = sessionmaker(engine, expire_on_commit=False)
 
+if _is_sqlite:
+    from sqlalchemy import event
+
+    @event.listens_for(engine, "connect")
+    def _sqlite_fk(dbapi_conn, _record) -> None:
+        # Enforce foreign keys like Postgres does, so ordering bugs show up in development and tests.
+        dbapi_conn.execute("PRAGMA foreign_keys=ON")
+
 
 class Base(DeclarativeBase):
     pass

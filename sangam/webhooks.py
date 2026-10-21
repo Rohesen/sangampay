@@ -24,6 +24,7 @@ MAX_ATTEMPTS = 8  # backoff: 30s, 1m, 2m, 4m ... ~1h total
 def emit(db: Session, merchant_id: str, mode: str, type_: str, data: dict) -> Event:
     event = Event(id=new_id("evt"), merchant_id=merchant_id, mode=mode, type=type_, data=data)
     db.add(event)
+    db.flush()  # deliveries reference the event
     for ep in db.query(WebhookEndpoint).filter_by(merchant_id=merchant_id, mode=mode, enabled=True):
         if "*" in ep.events or type_ in ep.events:
             db.add(WebhookDelivery(id=new_id("whd"), endpoint_id=ep.id, event_id=event.id))

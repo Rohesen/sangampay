@@ -70,6 +70,7 @@ def create_merchant(body: MerchantIn, db: Session = Depends(get_db)):
         raise APIError(403, "signup_disabled", "Sign-up is disabled on this server (SANGAM_ALLOW_SIGNUP)")
     merchant = Merchant(id=new_id("acct"), name=body.name, email=body.email, country=body.country, routing={})
     db.add(merchant)
+    db.flush()  # insert the merchant before its keys (FK order)
     keys = {}
     for mode in ("test", "live"):
         raw, display = generate_secret_key(mode)
