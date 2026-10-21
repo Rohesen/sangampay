@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - run: pytest -q
+
+  postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: sangam
+          POSTGRES_PASSWORD: sangam
+          POSTGRES_DB: sangam
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U sangam" --health-interval 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - name: Boot against Postgres and run the demo
+        env:
+          SANGAM_DATABASE_URL: postgresql+psycopg://sangam:sangam@localhost:5432/sangam
+          SANGAM_MASTER_KEY: a2tra2tra2tra2tra2tra2tra2tra2tra2tra2tra2s=
+          SANGAM_RUN_WORKERS: "false"
+        run: |
+          uvicorn sangam.main:app --port 8000 &
+          for i in $(seq 1 30); do curl -sf localhost:8000/health && break; sleep 1; done
+          python -m sangam.demo --payments 20
+
+  node-sdk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Load SDK and verify a webhook signature
+        working-directory: sdks/node
+        run: |
+          node -e '
+            const crypto = require("crypto"); const { verifyWebhook, SangamPay } = require("./index.js");
+            const body = JSON.stringify({ type: "payment_intent.succeeded", data: { id: "pi_x" } }), t = Math.floor(Date.now() / 1000);
+            const sig = crypto.createHmac("sha256", "whsec_t").update(`${t}.${body}`).digest("hex");
+            if (verifyWebhook(body, `t=${t},v1=${sig}`, "whsec_t").data.id !== "pi_x") process.exit(1);
+            new SangamPay("sk_test_x"); console.log("node sdk ok");'
+
+  php-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: php -l integrations/woocommerce/sangampay-woocommerce/sangampay-woocommerce.php

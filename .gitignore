@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+node_modules/
+.env
+*.db
+.sangam_dev_master_key
+.claude/

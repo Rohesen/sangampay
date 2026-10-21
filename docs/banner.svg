@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="400" viewBox="0 0 1280 400" role="img" aria-label="SangamPay: every payment rail, one open-source platform">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1d1160"/>
+      <stop offset="0.55" stop-color="#5b3df5"/>
+      <stop offset="1" stop-color="#0fb5a6"/>
+    </linearGradient>
+    <linearGradient id="river1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.55"/>
+    </linearGradient>
+    <linearGradient id="river2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7cf2e3" stop-opacity="0"/>
+      <stop offset="1" stop-color="#7cf2e3" stop-opacity="0.7"/>
+    </linearGradient>
+    <pattern id="lines" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(25)">
+      <rect width="2" height="24" fill="#ffffff" opacity="0.05"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="400" rx="28" fill="url(#bg)"/>
+  <rect width="1280" height="400" rx="28" fill="url(#lines)"/>
+
+  <!-- Rivers meeting: many payment rails converging into one -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M906 60 C 1010 80, 1060 190, 1150 200" stroke="url(#river1)" stroke-width="6"/>
+    <path d="M906 120 C 1000 130, 1060 195, 1150 200" stroke="url(#river2)" stroke-width="5"/>
+    <path d="M920 200 C 1010 200, 1070 200, 1150 200" stroke="url(#river1)" stroke-width="7"/>
+    <path d="M920 280 C 1000 270, 1060 205, 1150 200" stroke="url(#river2)" stroke-width="5"/>
+    <path d="M906 340 C 1010 320, 1060 210, 1150 200" stroke="url(#river1)" stroke-width="6"/>
+    <path d="M1150 200 L 1205 200" stroke="#ffffff" stroke-width="10" opacity="0.9"/>
+  </g>
+  <g font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="600" fill="#ffffff">
+    <g opacity="0.92" transform="translate(150,0)">
+      <rect x="640" y="44" width="104" height="32" rx="16" fill="#ffffff" fill-opacity="0.16"/><text x="692" y="66" text-anchor="middle">UPI</text>
+      <rect x="640" y="104" width="104" height="32" rx="16" fill="#ffffff" fill-opacity="0.16"/><text x="692" y="126" text-anchor="middle">Cards</text>
+      <rect x="626" y="184" width="132" height="32" rx="16" fill="#ffffff" fill-opacity="0.16"/><text x="692" y="206" text-anchor="middle">Net banking</text>
+      <rect x="626" y="264" width="132" height="32" rx="16" fill="#ffffff" fill-opacity="0.16"/><text x="692" y="286" text-anchor="middle">ACH · SEPA</text>
+      <rect x="640" y="324" width="104" height="32" rx="16" fill="#ffffff" fill-opacity="0.16"/><text x="692" y="346" text-anchor="middle">PayPal</text>
+    </g>
+    <circle cx="1226" cy="200" r="22" fill="#ffffff"/>
+    <text x="1226" y="207" text-anchor="middle" fill="#5b3df5" font-size="20" font-weight="800">₹</text>
+  </g>
+
+  <g font-family="'Segoe UI', 'Helvetica Neue', Arial, sans-serif" fill="#ffffff">
+    <rect x="72" y="92" width="64" height="64" rx="18" fill="#ffffff" fill-opacity="0.18"/>
+    <path d="M86 140c10-18 26-18 36 0M86 126c10-14 26-14 36 0" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <text x="156" y="142" font-size="56" font-weight="800" letter-spacing="-1.5">Sangam<tspan fill="#c9bfff">Pay</tspan></text>
+    <text x="74" y="214" font-size="30" font-weight="700" letter-spacing="-0.5">Every payment rail. One open-source platform.</text>
+    <text x="74" y="256" font-size="20" opacity="0.85">UPI · AutoPay · GST invoices · Subscriptions · Payouts · Smart routing</text>
+    <text x="74" y="290" font-size="20" opacity="0.85">Self-hosted. Non-custodial. Money lands in your own accounts.</text>
+    <rect x="74" y="320" width="196" height="36" rx="18" fill="#ffd166"/>
+    <text x="172" y="344" font-size="16" font-weight="700" fill="#3d2a00" text-anchor="middle">MIT · Open source</text>
+  </g>
+</svg>

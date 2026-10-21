@@ -1,0 +1,2 @@
+pytest>=8
+websockets>=12  # scripts/screenshots.py only

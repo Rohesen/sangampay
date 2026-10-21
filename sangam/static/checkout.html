@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Secure checkout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#f3f2fb;--surface:#ffffff;--surface-2:#f8f7fd;--fg:#16132b;--muted:#6b6886;--line:#e7e4f3;
+  --brand:#5b3df5;--brand-2:#0fb5a6;--brand-ink:#ffffff;--ring:rgba(91,61,245,.22);
+  --ok:#0e9f6e;--ok-bg:#e6f7f0;--warn:#b7791f;--warn-bg:#fdf3e1;--err:#d92d20;--err-bg:#fdecea;
+  --shadow:0 1px 2px rgba(22,19,43,.04),0 12px 40px -12px rgba(40,24,120,.18);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0b0a14;--surface:#15131f;--surface-2:#1b1928;--fg:#f1effa;--muted:#9a96b3;--line:#2a2740;
+  --brand:#8b74ff;--brand-2:#2dd4bf;--brand-ink:#0b0a14;--ring:rgba(139,116,255,.3);
+  --ok:#34d399;--ok-bg:#0f2a22;--warn:#f6c26b;--warn-bg:#2b2213;--err:#ff8a7a;--err-bg:#2e1614;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 20px 50px -20px rgba(0,0,0,.7);
+}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font:15px/1.55 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--fg);min-height:100vh;
+  background:var(--bg);background-image:radial-gradient(1200px 600px at 10% -10%,color-mix(in srgb,var(--brand) 14%,transparent),transparent 60%),
+  radial-gradient(900px 500px at 110% 110%,color-mix(in srgb,var(--brand-2) 12%,transparent),transparent 60%);
+  display:grid;place-items:center;padding:32px 16px;-webkit-font-smoothing:antialiased}
+.shell{width:100%;max-width:920px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);background:var(--surface);
+  border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden;min-height:560px}
+
+/* Summary panel */
+aside{position:relative;padding:36px 34px;color:#fff;display:flex;flex-direction:column;gap:28px;isolation:isolate;
+  background:linear-gradient(150deg,#2a1a8a 0%,#5b3df5 48%,#0fb5a6 130%)}
+aside::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.35;
+  background:radial-gradient(400px 260px at 85% 15%,rgba(255,255,255,.35),transparent 60%),
+  repeating-linear-gradient(115deg,rgba(255,255,255,.06) 0 2px,transparent 2px 22px)}
+.merchant{display:flex;align-items:center;gap:12px}
+.avatar{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+  display:grid;place-items:center;font-weight:800;font-size:18px;backdrop-filter:blur(6px)}
+.merchant-name{font-weight:700;font-size:16px;line-height:1.2}
+.merchant-sub{font-size:12.5px;opacity:.8}
+.test-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.06em;
+  background:#ffd166;color:#4a3300;padding:3px 10px;border-radius:999px;width:max-content}
+.pay-label{font-size:13px;opacity:.8;font-weight:500}
+.amount{font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1.05;margin-top:4px;font-variant-numeric:tabular-nums}
+.amount .cur{font-size:22px;font-weight:600;opacity:.85;margin-right:6px;letter-spacing:0}
+.desc{margin-top:10px;font-size:14.5px;opacity:.9}
+.order-id{margin-top:14px;font-size:12px;opacity:.65;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.trust{margin-top:auto;display:grid;gap:10px;font-size:13px;opacity:.92}
+.trust div{display:flex;align-items:center;gap:10px}
+.trust svg{flex:none;opacity:.9}
+
+/* Main panel */
+main{padding:36px 34px;display:flex;flex-direction:column;min-width:0}
+h1{font-size:20px;font-weight:700;margin:0 0 4px;letter-spacing:-.01em}
+.lead{color:var(--muted);margin:0 0 22px;font-size:14px}
+.methods{display:grid;gap:10px}
+.method{display:flex;align-items:center;gap:14px;width:100%;text-align:left;font:inherit;color:inherit;background:var(--surface);
+  border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s,background .15s}
+.method:hover{border-color:color-mix(in srgb,var(--brand) 55%,var(--line));background:var(--surface-2);transform:translateY(-1px)}
+.method:focus-visible{outline:none;box-shadow:0 0 0 4px var(--ring);border-color:var(--brand)}
+.method:disabled{cursor:progress;opacity:.55;transform:none}
+.method.loading{opacity:1;border-color:var(--brand);background:var(--surface-2)}
+.m-ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none;color:var(--brand);
+  background:color-mix(in srgb,var(--brand) 11%,transparent)}
+.m-ico.upi{color:#0f9d58;background:color-mix(in srgb,#0f9d58 12%,transparent)}
+.m-ico.netbanking{color:#d97706;background:color-mix(in srgb,#d97706 12%,transparent)}
+.m-ico.bank_debit{color:#0ea5e9;background:color-mix(in srgb,#0ea5e9 12%,transparent)}
+.m-ico.paypal{color:#1d4ed8;background:color-mix(in srgb,#1d4ed8 12%,transparent)}
+.m-text{flex:1;min-width:0}
+.m-title{font-weight:650;font-size:15px;display:flex;align-items:center;gap:8px}
+.m-sub{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;color:var(--ok);background:var(--ok-bg);padding:2px 7px;border-radius:999px}
+.chev{color:var(--muted);flex:none;transition:transform .15s}
+.method:hover .chev{transform:translateX(3px);color:var(--brand)}
+.spinner{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--ring);border-top-color:var(--brand);animation:spin .7s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.alert{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;font-size:13.5px;margin-bottom:16px}
+.alert.err{background:var(--err-bg);color:var(--err)}
+.back{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:0;font:inherit;font-size:13.5px;color:var(--muted);cursor:pointer;margin-bottom:18px;font-weight:600}
+.back:hover{color:var(--brand)}
+
+/* UPI */
+.upi-wrap{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:18px;border:1.5px solid var(--line);border-radius:18px;background:var(--surface-2)}
+.qr-frame{position:relative;padding:12px;background:#fff;border-radius:14px;box-shadow:0 0 0 1px #0000000d}
+.qr-frame img,.qr-frame canvas{display:block}
+.qr-frame::after{content:"UPI";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;color:#0f9d58;
+  font-weight:800;font-size:11px;padding:3px 6px;border-radius:6px;box-shadow:0 0 0 3px #fff}
+.upi-info .payee{font-weight:700}
+.upi-info .vpa{color:var(--muted);font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}
+.apps{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.apps span{font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--muted)}
+.steps{list-style:none;padding:0;margin:20px 0 14px;display:grid;gap:8px;counter-reset:s}
+.steps li{display:flex;gap:10px;align-items:center;font-size:13.5px;color:var(--muted);counter-increment:s}
+.steps li::before{content:counter(s);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;flex:none;font-size:11.5px;font-weight:700;
+  background:color-mix(in srgb,var(--brand) 12%,transparent);color:var(--brand)}
+label.field{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+.input{width:100%;font:inherit;font-size:18px;font-weight:600;letter-spacing:.14em;padding:13px 14px;border-radius:12px;border:1.5px solid var(--line);
+  background:var(--surface);color:inherit;font-variant-numeric:tabular-nums;transition:border-color .15s,box-shadow .15s}
+.input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 4px var(--ring)}
+.input::placeholder{letter-spacing:.06em;font-weight:500;color:color-mix(in srgb,var(--muted) 70%,transparent)}
+.hint{font-size:12.5px;color:var(--muted);margin-top:6px}
+.err-text{font-size:13px;color:var(--err);margin-top:8px;min-height:1px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;font:inherit;font-weight:700;font-size:15px;border:0;border-radius:14px;
+  padding:14px 18px;background:linear-gradient(135deg,var(--brand),color-mix(in srgb,var(--brand) 70%,var(--brand-2)));color:#fff;cursor:pointer;
+  text-decoration:none;box-shadow:0 8px 20px -8px color-mix(in srgb,var(--brand) 70%,transparent);transition:transform .15s,box-shadow .15s,opacity .15s;margin-top:16px}
+.btn:hover{transform:translateY(-1px);box-shadow:0 12px 24px -10px color-mix(in srgb,var(--brand) 80%,transparent)}
+.btn:disabled{opacity:.6;cursor:progress;transform:none}
+.btn.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--line);box-shadow:none}
+.mobile-only{display:none}
+@media (pointer:coarse){.mobile-only{display:inline-flex}}
+
+/* Result */
+.result{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 0}
+.badge{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;margin-bottom:18px}
+.badge.ok{background:var(--ok-bg);color:var(--ok)}
+.badge.wait{background:var(--warn-bg);color:var(--warn)}
+.badge.err{background:var(--err-bg);color:var(--err)}
+.check path{stroke-dasharray:40;stroke-dashoffset:40;animation:draw .5s .15s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.pulse{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.06);opacity:.75}}
+.result h2{margin:0 0 6px;font-size:22px;letter-spacing:-.01em}
+.result p{margin:0;color:var(--muted);max-width:320px}
+.receipt{margin-top:22px;width:100%;max-width:320px;border:1.5px dashed var(--line);border-radius:14px;padding:14px 16px;font-size:13.5px;display:grid;gap:6px}
+.receipt div{display:flex;justify-content:space-between;gap:12px}
+.receipt span:first-child{color:var(--muted)}
+.receipt span:last-child{font-weight:600;text-align:right;word-break:break-all}
+
+/* Skeleton */
+.sk{border-radius:16px;height:74px;background:linear-gradient(90deg,var(--surface-2),var(--line),var(--surface-2));background-size:200% 100%;animation:sh 1.2s linear infinite}
+@keyframes sh{to{background-position:-200% 0}}
+footer.powered{margin-top:auto;padding-top:26px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:var(--muted)}
+footer.powered b{color:var(--fg);font-weight:700}
+footer.powered b span{color:var(--brand)}
+.fade{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}}
+
+@media (max-width:760px){
+  body{padding:0;place-items:stretch}
+  .shell{grid-template-columns:1fr;border-radius:0;border:0;min-height:100vh}
+  aside{padding:22px 20px 24px;gap:16px}
+  .amount{font-size:34px}
+  .trust{display:none}
+  main{padding:24px 20px 28px}
+  .upi-wrap{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .apps{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="merchant">
+      <div class="avatar" id="avatar">·</div>
+      <div><div class="merchant-name" id="merchant">Loading…</div><div class="merchant-sub">Secure checkout</div></div>
+    </div>
+    <div>
+      <div id="testBadge" hidden><span class="test-badge">● TEST MODE</span></div>
+      <div class="pay-label" style="margin-top:14px">Amount to pay</div>
+      <div class="amount" id="amount">&nbsp;</div>
+      <div class="desc" id="desc"></div>
+      <div class="order-id" id="orderId"></div>
+    </div>
+    <div class="trust">
+      <div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Bank-grade encryption end to end</div>
+      <div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Card &amp; bank logins entered only on your bank's page</div>
+      <div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Paid directly to the merchant</div>
+    </div>
+  </aside>
+  <main>
+    <div id="view" style="display:flex;flex-direction:column;flex:1">
+      <h1>Choose how to pay</h1><p class="lead">Loading payment options…</p>
+      <div class="methods"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+    </div>
+    <footer class="powered">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Secured by <b>Sangam<span>Pay</span></b>
+    </footer>
+  </main>
+</div>
+<script>
+(() => {
+  const id = location.pathname.split("/").filter(Boolean)[1];
+  const cs = new URLSearchParams(location.hash.slice(1)).get("cs");
+  const view = document.getElementById("view");
+  let poll = null;
+
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const svg = (d, size = 22) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  const METHODS = {
+    upi: {title: "UPI", sub: "Google Pay, PhonePe, Paytm, BHIM & more", tag: "Instant",
+          icon: svg('<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/><path d="m10 9 3-3v5h-2l3 3"/>')},
+    netbanking: {title: "Net banking", sub: "Pay from your bank account",
+          icon: svg('<path d="M3 10 12 4l9 6"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8"/><path d="M3 21h18"/>')},
+    card: {title: "Credit / debit card", sub: "Visa, Mastercard, RuPay, Amex",
+          icon: svg('<rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20M6 15h4"/>')},
+    bank_debit: {title: "Bank debit", sub: "ACH · SEPA · Bacs · BECS",
+          icon: svg('<path d="M7 7h12l-3-3M17 17H5l3 3"/>')},
+    paypal: {title: "PayPal", sub: "Balance or linked card",
+          icon: svg('<path d="M20 12V8a2 2 0 0 0-2-2H5a2 2 0 0 1 0-4h12v4"/><path d="M3 4v14a2 2 0 0 0 2 2h15v-4"/><path d="M17 12a2 2 0 0 0 0 4h4v-4z"/>')},
+  };
+  const chev = svg('<path d="m9 6 6 6-6 6"/>', 18);
+  const fmtAmount = s => {
+    const [whole, frac] = s.display_amount.split(".");
+    const grouped = Number(whole).toLocaleString(s.currency === "INR" ? "en-IN" : "en-US");
+    return `<span class="cur">${esc(s.currency)}</span>${grouped}${frac ? `<span style="opacity:.7">.${frac}</span>` : ""}`;
+  };
+
+  async function call(path, body) {
+    const res = await fetch(`/v1/checkout/${id}${path}`, {
+      method: body ? "POST" : "GET",
+      headers: {"X-Client-Secret": cs, "Content-Type": "application/json"},
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || "Something went wrong");
+    return data;
+  }
+
+  function summary(s) {
+    document.getElementById("merchant").textContent = s.merchant_name;
+    document.getElementById("avatar").textContent = (s.merchant_name || "·").trim()[0].toUpperCase();
+    document.getElementById("amount").innerHTML = fmtAmount(s);
+    document.getElementById("desc").textContent = s.description || "";
+    document.getElementById("orderId").textContent = s.id;
+    document.getElementById("testBadge").hidden = s.livemode;
+    document.title = `Pay ${s.merchant_name}`;
+  }
+
+  function set(html) { view.innerHTML = `<div class="fade" style="display:flex;flex-direction:column;flex:1">${html}</div>`; }
+
+  function render(s) {
+    summary(s); clearInterval(poll);
+    if (s.status === "succeeded" || s.status === "processing") return renderDone(s);
+    if (s.status === "pending_verification") {
+      set(`<div class="result"><div class="badge wait pulse">${svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', 34)}</div>
+        <h2>Verifying your payment</h2><p>${esc(s.merchant_name)} is confirming your UPI reference. This page updates on its own, so you can keep it open.</p></div>`);
+      poll = setInterval(refresh, 5000);
+      return;
+    }
+    if (s.status === "canceled") {
+      return set(`<div class="result"><div class="badge err">${svg('<path d="M18 6 6 18M6 6l12 12"/>', 32)}</div><h2>Payment canceled</h2><p>This payment link is no longer active.</p></div>`);
+    }
+    if (s.status === "requires_action" && s.next_action?.type === "upi_intent") return renderUpi(s);
+    renderMethods(s);
+  }
+
+  function renderDone(s) {
+    const ok = s.status === "succeeded";
+    set(`<div class="result">
+      <div class="badge ${ok ? "ok" : "wait"}">${ok ? `<svg class="check" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>`
+        : svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', 34)}</div>
+      <h2>${ok ? "Payment successful" : "Payment processing"}</h2>
+      <p>${ok ? "Thank you! A confirmation has been sent to the merchant. You can close this page." : "Your bank is clearing this payment. This usually takes 1–4 business days."}</p>
+      <div class="receipt"><div><span>Paid to</span><span>${esc(s.merchant_name)}</span></div>
+        <div><span>Amount</span><span>${esc(s.currency)} ${esc(s.display_amount)}</span></div>
+        <div><span>Method</span><span>${esc(METHODS[s.method]?.title || s.method || "")}</span></div>
+        <div><span>Reference</span><span>${esc(s.id)}</span></div></div></div>`);
+  }
+
+  function renderMethods(s) {
+    if (!s.available_methods.length) {
+      return set(`<h1>Choose how to pay</h1><div class="alert err">No payment methods are available for ${esc(s.currency)} right now.</div>`);
+    }
+    set(`<h1>Choose how to pay</h1><p class="lead">All payments are encrypted and processed securely.</p>
+      ${s.failure_reason ? `<div class="alert err">${svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/>', 18)}<span>${esc(s.failure_reason)}. Please try again or choose another method.</span></div>` : ""}
+      <div class="methods">${s.available_methods.map(m => {
+        const meta = METHODS[m.method] || {title: m.label, sub: "", icon: svg('<circle cx="12" cy="12" r="9"/>')};
+        return `<button class="method" data-m="${esc(m.method)}">
+          <span class="m-ico ${esc(m.method)}">${meta.icon}</span>
+          <span class="m-text"><span class="m-title">${esc(meta.title)}${meta.tag ? `<span class="tag">${meta.tag}</span>` : ""}</span><span class="m-sub">${esc(meta.sub)}</span></span>
+          <span class="chev">${chev}</span></button>`;
+      }).join("")}</div><div class="err-text" id="err"></div>`);
+    view.querySelectorAll(".method").forEach(b => b.onclick = () => choose(b.dataset.m, b));
+  }
+
+  async function choose(method, btn) {
+    view.querySelectorAll(".method").forEach(b => b.disabled = true);
+    btn.classList.add("loading");
+    btn.querySelector(".chev").innerHTML = '<span class="spinner"></span>';
+    try {
+      const s = await call("/confirm", {method, method_data: {}});
+      if (s.next_action?.type === "redirect") { location.href = s.next_action.url; return; }
+      render(s);
+    } catch (e) {
+      btn.classList.remove("loading");
+      btn.querySelector(".chev").innerHTML = chev;
+      view.querySelectorAll(".method").forEach(b => b.disabled = false);
+      document.getElementById("err").textContent = e.message;
+    }
+  }
+
+  function renderUpi(s) {
+    const a = s.next_action;
+    set(`<button class="back" id="back">${svg('<path d="m15 6-6 6 6 6"/>', 16)} All payment methods</button>
+      <h1>Pay with UPI</h1><p class="lead">Scan the code with any UPI app on your phone.</p>
+      <div class="upi-wrap"><div class="qr-frame" id="qr" aria-label="UPI QR code"></div>
+        <div class="upi-info"><div class="payee">${esc(a.payee_name)}</div><div class="vpa">${esc(a.vpa)}</div>
+        <div class="apps"><span>GPay</span><span>PhonePe</span><span>Paytm</span><span>BHIM</span></div>
+        <a class="btn mobile-only" href="${esc(a.uri)}">${svg('<path d="M7 17 17 7M8 7h9v9"/>', 18)} Open UPI app</a></div></div>
+      <ol class="steps"><li>Scan &amp; pay ${esc(s.currency)} ${esc(s.display_amount)}</li><li>Copy the 12-digit UTR / UPI Ref. No. from your app</li><li>Enter it below to confirm</li></ol>
+      <label class="field" for="utr">UPI reference number</label>
+      <input class="input" id="utr" inputmode="numeric" maxlength="12" autocomplete="off" placeholder="12-digit UTR">
+      <div class="err-text" id="err"></div>
+      <button class="btn" id="sendUtr">I've paid, confirm payment</button>`);
+    const qr = document.getElementById("qr");
+    if (window.QRCode) new QRCode(qr, {text: a.uri, width: 168, height: 168, correctLevel: QRCode.CorrectLevel.H});
+    else qr.textContent = a.uri;
+    const input = document.getElementById("utr");
+    input.oninput = () => input.value = input.value.replace(/\D/g, "");
+    document.getElementById("sendUtr").onclick = async e => {
+      const b = e.currentTarget; b.disabled = true; b.innerHTML = '<span class="spinner" style="border-color:rgba(255,255,255,.35);border-top-color:#fff"></span> Confirming…';
+      try { render(await call("/utr", {utr: input.value})); }
+      catch (err) { document.getElementById("err").textContent = err.message; b.disabled = false; b.textContent = "I've paid, confirm payment"; }
+    };
+    document.getElementById("back").onclick = () => renderMethods(s);
+  }
+
+  async function refresh() {
+    try { render(await call("")); }
+    catch (e) { set(`<div class="result"><div class="badge err">${svg('<circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/>', 32)}</div><h2>Can't load this payment</h2><p>${esc(e.message)}</p></div>`); }
+  }
+
+  if (!cs) { set(`<div class="result"><div class="badge err">${svg('<path d="M18 6 6 18M6 6l12 12"/>', 32)}</div><h2>Invalid payment link</h2><p>This link is incomplete. Ask the merchant for a new one.</p></div>`); return; }
+  refresh();
+})();
+</script>
+</body>
+</html>
