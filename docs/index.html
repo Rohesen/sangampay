@@ -7,6 +7,7 @@
 <meta name="description" content="Open-source, self-hosted payments: UPI (incl. zero-fee direct UPI), AutoPay subscriptions, GST invoices, payment links, smart routing, reconciliation and payouts over Razorpay, Stripe and PayPal. Money lands in your own accounts.">
 <link rel="canonical" href="https://sangampay.com/">
 <link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preload" as="image" type="image/webp" imagesrcset="img/dashboard-overview-640.webp 640w, img/dashboard-overview-1280.webp 1280w, img/dashboard-overview-1920.webp 1920w" imagesizes="(max-width: 1120px) calc(100vw - 40px), 1080px" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sangampay.com/">
 <meta property="og:title" content="SangamPay · Every payment rail. One open-source platform.">
@@ -31,7 +32,7 @@
 html{scroll-behavior:smooth}
 body{margin:0;font:16px/1.6 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased}
 a{color:inherit}
-img{max-width:100%;display:block}
+img{max-width:100%;height:auto;display:block}
 .wrap{max-width:1160px;margin:0 auto;padding:0 20px}
 code,pre{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
 
@@ -118,7 +119,7 @@ h2{font-size:clamp(30px,4vw,44px);line-height:1.1;letter-spacing:-.03em;margin:1
 .tabs button[aria-selected=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 
 /* gallery */
-.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:40px}
 .gallery figure{margin:0}
 .gallery figcaption{font-size:14px;color:var(--muted);margin-top:10px;font-weight:600}
 
@@ -146,7 +147,8 @@ footer a{text-decoration:none}footer a:hover{color:var(--fg)}
 
 @media (max-width:960px){
   .links{display:none}
-  .grid,.gallery,.steps{grid-template-columns:1fr 1fr}
+  .grid,.steps{grid-template-columns:1fr 1fr}
+  .grid>.card:last-child:nth-child(odd),.steps>.step:last-child:nth-child(odd){grid-column:1/-1}
   .stats{grid-template-columns:1fr 1fr}
   .show,.show.rev{grid-template-columns:1fr;gap:32px}.show.rev .copy{order:0}
   .stack .phone{right:8px;bottom:-24px}
@@ -157,6 +159,12 @@ footer a{text-decoration:none}footer a:hover{color:var(--fg)}
   .hero{padding-top:56px}
   .compare th,.compare td{padding:12px 14px;font-size:14px}
   .compare td:first-child{width:auto}
+  .compare thead{display:none}
+  .compare tr{display:block;padding:14px 18px;border-bottom:1px solid var(--line)}
+  .compare tr:last-child{border-bottom:0}
+  .compare td{display:block;border:0;padding:2px 0;font-size:15px}
+  .compare td:first-child{font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--brand);margin-bottom:4px}
+  .compare td:nth-child(2)::before{content:"Single gateway: ";font-weight:600;color:var(--fg)}
   .final{padding:44px 22px}
   nav.top .btn.ghost{display:none}
 }
@@ -186,8 +194,8 @@ footer a{text-decoration:none}footer a:hover{color:var(--fg)}
   <div class="rails"><span>UPI</span><span>UPI AutoPay</span><span>e-NACH</span><span>Net banking</span><span>Cards</span><span>Apple / Google Pay</span><span>ACH</span><span>SEPA</span><span>PayPal</span></div>
   <div class="shot-hero"><div class="bar"><i></i><i></i><i></i></div>
     <picture>
-      <source srcset="screenshots/dashboard-overview-dark.png" media="(prefers-color-scheme: dark)">
-      <img src="screenshots/dashboard-overview.png" alt="SangamPay dashboard showing net volume, success rate, MRR and a daily volume chart" width="1440" height="900">
+      <source srcset="img/dashboard-overview-dark-640.webp 640w, img/dashboard-overview-dark-1280.webp 1280w, img/dashboard-overview-dark-1920.webp 1920w" sizes="(max-width: 1120px) calc(100vw - 40px), 1080px" media="(prefers-color-scheme: dark)" type="image/webp">
+      <img src="img/dashboard-overview-1280.webp" srcset="img/dashboard-overview-640.webp 640w, img/dashboard-overview-1280.webp 1280w, img/dashboard-overview-1920.webp 1920w" sizes="(max-width: 1120px) calc(100vw - 40px), 1080px" decoding="async" alt="SangamPay dashboard showing net volume, success rate, MRR and a daily volume chart" fetchpriority="high" width="1440" height="900">
     </picture>
   </div>
 </div></header>
@@ -249,14 +257,14 @@ footer a{text-decoration:none}footer a:hover{color:var(--fg)}
         <li><span class="check">✓</span><span><b>Every method</b> your connected gateways support, on one page.</span></li>
         <li><span class="check">✓</span><span><b>Embeds anywhere</b> with one script tag or a plain redirect.</span></li>
       </ul></div>
-    <div class="stack"><div class="frame"><img src="screenshots/checkout-upi.png" alt="UPI checkout with QR code" loading="lazy" width="1280" height="900"></div>
-      <img class="phone" src="screenshots/checkout-mobile.png" alt="Mobile checkout" loading="lazy" width="390" height="844"></div>
+    <div class="stack"><div class="frame"><img src="img/checkout-upi-1280.webp" srcset="img/checkout-upi-640.webp 640w, img/checkout-upi-1280.webp 1280w, img/checkout-upi-1920.webp 1920w" sizes="(max-width: 960px) calc(100vw - 40px), 640px" decoding="async" alt="UPI checkout with QR code" loading="lazy" width="1280" height="900"></div>
+      <img class="phone" src="img/checkout-mobile-780.webp" srcset="img/checkout-mobile-390.webp 390w, img/checkout-mobile-780.webp 780w" sizes="(max-width: 960px) 34vw, 220px" decoding="async" alt="Mobile checkout" loading="lazy" width="390" height="844"></div>
   </div>
 </div></section>
 
 <section style="padding-top:40px"><div class="wrap">
   <div class="show rev">
-    <div class="frame"><img src="screenshots/invoice.png" alt="GST tax invoice with IGST breakdown and pay button" loading="lazy" width="1100" height="1000"></div>
+    <div class="frame"><img src="img/invoice-1280.webp" srcset="img/invoice-640.webp 640w, img/invoice-1280.webp 1280w, img/invoice-1920.webp 1920w" sizes="(max-width: 960px) calc(100vw - 40px), 620px" decoding="async" alt="GST tax invoice with IGST breakdown and pay button" loading="lazy" width="1100" height="1000"></div>
     <div class="copy"><div class="eyebrow">Billing</div><h2>GST invoices and subscriptions on autopilot</h2>
       <p class="sub">Bill once or every month. SangamPay works out the tax, collects through mandates and chases failed payments for you.</p>
       <ul>
@@ -318,12 +326,12 @@ res.redirect(pi.checkout_url);
 <section style="padding-top:20px"><div class="wrap">
   <div class="center"><div class="eyebrow">Dashboard</div><h2>Run your whole money operation</h2></div>
   <div class="gallery">
-    <figure><div class="frame"><img src="screenshots/dashboard-subscriptions.png" alt="Subscriptions" loading="lazy" width="1440" height="900"></div><figcaption>Subscriptions and mandates</figcaption></figure>
-    <figure><div class="frame"><img src="screenshots/dashboard-gateways.png" alt="Gateways and routing" loading="lazy" width="1440" height="900"></div><figcaption>Gateways and smart routing</figcaption></figure>
-    <figure><div class="frame"><img src="screenshots/dashboard-payments.png" alt="Payments with risk scores" loading="lazy" width="1440" height="900"></div><figcaption>Payments with risk scores</figcaption></figure>
-    <figure><div class="frame"><img src="screenshots/dashboard-recon.png" alt="Reconciliation" loading="lazy" width="1440" height="900"></div><figcaption>Bank reconciliation</figcaption></figure>
-    <figure><div class="frame"><img src="screenshots/dashboard-developers.png" alt="Developers" loading="lazy" width="1440" height="900"></div><figcaption>Team keys, webhooks, audit log</figcaption></figure>
-    <figure><div class="frame"><img src="screenshots/dashboard-overview-dark.png" alt="Dark mode dashboard" loading="lazy" width="1440" height="900"></div><figcaption>Dark mode, automatically</figcaption></figure>
+    <figure><div class="frame"><img src="img/dashboard-subscriptions-1280.webp" srcset="img/dashboard-subscriptions-640.webp 640w, img/dashboard-subscriptions-1280.webp 1280w, img/dashboard-subscriptions-1920.webp 1920w" sizes="(max-width: 620px) calc(100vw - 40px), (max-width: 1160px) 50vw, 560px" decoding="async" alt="Subscriptions" loading="lazy" width="1440" height="900"></div><figcaption>Subscriptions and mandates</figcaption></figure>
+    <figure><div class="frame"><img src="img/dashboard-gateways-1280.webp" srcset="img/dashboard-gateways-640.webp 640w, img/dashboard-gateways-1280.webp 1280w, img/dashboard-gateways-1920.webp 1920w" sizes="(max-width: 620px) calc(100vw - 40px), (max-width: 1160px) 50vw, 560px" decoding="async" alt="Gateways and routing" loading="lazy" width="1440" height="900"></div><figcaption>Gateways and smart routing</figcaption></figure>
+    <figure><div class="frame"><img src="img/dashboard-payments-1280.webp" srcset="img/dashboard-payments-640.webp 640w, img/dashboard-payments-1280.webp 1280w, img/dashboard-payments-1920.webp 1920w" sizes="(max-width: 620px) calc(100vw - 40px), (max-width: 1160px) 50vw, 560px" decoding="async" alt="Payments with risk scores" loading="lazy" width="1440" height="900"></div><figcaption>Payments with risk scores</figcaption></figure>
+    <figure><div class="frame"><img src="img/dashboard-recon-1280.webp" srcset="img/dashboard-recon-640.webp 640w, img/dashboard-recon-1280.webp 1280w, img/dashboard-recon-1920.webp 1920w" sizes="(max-width: 620px) calc(100vw - 40px), (max-width: 1160px) 50vw, 560px" decoding="async" alt="Reconciliation" loading="lazy" width="1440" height="900"></div><figcaption>Bank reconciliation</figcaption></figure>
+    <figure><div class="frame"><img src="img/dashboard-developers-1280.webp" srcset="img/dashboard-developers-640.webp 640w, img/dashboard-developers-1280.webp 1280w, img/dashboard-developers-1920.webp 1920w" sizes="(max-width: 620px) calc(100vw - 40px), (max-width: 1160px) 50vw, 560px" decoding="async" alt="Developers" loading="lazy" width="1440" height="900"></div><figcaption>Team keys, webhooks, audit log</figcaption></figure>
+    <figure><div class="frame"><img src="img/dashboard-overview-dark-1280.webp" srcset="img/dashboard-overview-dark-640.webp 640w, img/dashboard-overview-dark-1280.webp 1280w, img/dashboard-overview-dark-1920.webp 1920w" sizes="(max-width: 620px) calc(100vw - 40px), (max-width: 1160px) 50vw, 560px" decoding="async" alt="Dark mode dashboard" loading="lazy" width="1440" height="900"></div><figcaption>Dark mode, automatically</figcaption></figure>
   </div>
 </div></section>
 
